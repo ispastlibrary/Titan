@@ -1,0 +1,23 @@
+import math
+import pylab as pl
+from scipy.integrate import quad
+
+def integrand(t,a,x):
+    return math.exp(-t**2)/((x-t)**2+a**2)
+def voigt(a,x):
+    return quad(integrand,-5,5,args=(a,x)) 
+A=[0]*101 
+B=[0]*101 
+x=-5 
+i=0
+
+a=0.2
+
+#while (i<101):
+A[i]=x
+B[i]=voigt(a,x)
+# x+=0.1
+print(voigt(a,x)[0])
+
+#pl.plot(A,B)
+#pl.show()

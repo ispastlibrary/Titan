@@ -1,0 +1,14 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_
+
+def fun(x,y):    
+    return -np.cos(x)
+ghgfy0=0
+x0=0
+z=fun(x0,y0
+i=1
+ for i in range(0,10):    
+    if i<10:
+    z=z+0.3*fun(x,y)     
+print(z)

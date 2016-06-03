@@ -1,0 +1,10 @@
+import numpy as np
+import pyplot as pl
+
+A = [[2,3],[10,16]]
+B = [[1],[2]]
+AT = a.transpose()
+Aadj = 
+detA = np.linalg.det(A)
+
+A1 = (1/detA)*Aadj

@@ -1,0 +1,283 @@
+from scipy.special import wofz
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+from scipy import interpolate
+
+def voigt(x,y):  #Fojtova funkcija  
+    z = x + 1j*y
+    w = wofz(z).real
+    return w
+
+e=1.60217657e-19 #elementarno naelektrisanje [C]
+AU=149597871000 #Astronomska jedinica [m]
+Na=6.02*1e+23 #Avogadrov broj
+M=22.989769*1e-3 #molarna masa Na [kg/mol]
+me=9.1e-31 #masa elektrona[kg]
+T=300  #temperatura [K]
+Rk=0.1*AU #poluprecnik kome[m] 
+k=1.38*10e-23 #Bolcmanova konst [J\K]    
+dE=3.37*1e-19 # razlika energetskih stanja 3p i 3s, povezana sa talasnom duzinom [J] 
+R=Na*k #Univerzalna gasna konstanta [J/(molK)]
+L0=589e-9 #talasna duzina [m]
+h=6.63*1e-34 #Plankova konstanta [Js]
+c=299792458 #brzina svetlosti [m/s]
+A=6.14e+7 #Ajnstajnov koef za verovatnocu spontane emisije[s^-1] (To smo nasli na Nistu (AKO JE TO, TO))
+g0=1 # statisticka tezina 3s orbitale (s)
+g1=3 # statisticka tezina 3p orbitale (px,py,pz)
+V0=c/L0 #centralna frekvencija [s^-1]
+Ts=5777 #efektivna temperatura Sunca [K]
+eV=1.60217657e-19 #1eV koliko J
+E0=-5.1390767*eV #energija 3s orbitale Na [J] (Hyper Physics)
+E1=E0+2.1044*eV #energija 3p(3/2) orbitale Na [J]
+Ejon=495.8e+3   #energija prve jonizacije Na [J/mol]
+#Q=1e28 #Stepen produktivnosti(Haser) [1/s]
+vt=4500 # termalna brzina gasa [m/s]
+vp=26600 #outflow brzina hidrodinamicka [m/s]
+ld=147e6 #velicina cere/sina/hermafrodit [m]
+lp=147e4 #velicina majke/oca [m]
+Rn=3e4 #poluprecnik komete [m]
+ao=5.3e-11 #Bohrov radijus [m]
+Eh=13.6 #Energija jonizacije vodonika [eV]
+Ei=5.1390767 #Energija I jonizacije Na [eV]
+Zr=1 #Jonizaciono stanje emitera/NaI, Z=1
+l0=0 #orbitalni broj za s
+l1=1 #orbitalni broj za p
+Eh1=10.19880570432 #Korigovan energija(NIST) za prvo pobudjeno stanje HI(2p) J= 1/2
+Eh2=10.19885106866 #____,,___ J=3/2
+Jh1=1/2 #NIST sluzi za g
+Jh2=3/2 #NIST sluzi za g
+aNa=22.989769 #atomska masa Na [a.j.m.]
+aH=1.00794 #atomska masa H [a.j.m.]
+Ro=600 #Gustina komete [kg/m^3]
+Mh=0.001 #Molarna masa vodonika
+
+a=[0]*6 #niz koef za NaI
+b=[0]*6 #niz koef za NaII
+#koeficijenti aproksimativne polinomne funkcije za izracunavanje particione f-je
+
+a[0]=-2.60507178e+3
+a[1]=1.71419244e+3
+a[2]=-4.50632658e+2
+a[3]=5.91751503e+1
+a[4]=-3.88164070e+0
+a[5]=1.01752936e-1
+
+b[0]=-3.68868193e-6
+b[1]=2.28941495e-6
+b[2]=-5.66767833e-7
+b[3]=6.99552282e-8
+b[4]=-4.30495956e-9
+b[5]=1.05668164e-10
+
+nh=10e19 #broj atoma vodonika po m^3 Milic lupio, mi idioti koristili
+nna=pow(10,-5.82)*nh #koncentracija atoma natrijuma 
+#nnajonizovani=0
+
+dL=5*1e-12 #od centralne talasne duzine[m]
+L=L0-dL  #druga talasna duzina [m]
+
+br_ljuspica=300
+dr=(Rk-Rn)/br_ljuspica #koma je podeljena na 10000 ljuspica
+
+def kon_Na_jezgro(Ro): #koncentracija Na u jezgru, sastav kao u Suncu
+    mh=0.71*Ro*(4/3)*(Rn**3)*np.pi
+    nh=(mh*Na/Mh)/((4/3)*(Rn**3)*np.pi)
+    nna=pow(10,-5.82)*nh
+    return nna
+
+#print(kon_Na_jezgro(Ro),"konc Na jezgro")
+
+"""def vd_vals(n):
+    mi= 1/aNa + 1/aH
+    gh1=2*Jh1+1 #statisticke tezine za vodonik
+    gh2=2*Jh2+1
+    Ep=(Eh1*gh1+Eh2*gh2)/(gh1+gh2)
+    np_vals=Zr*((Eh/np.abs(E1/eV))**1/2)
+    ns_vals=Zr*((Eh/np.abs(E0/eV))**1/2)
+    Rs=((ns_vals**2)/2)*(5*ns_vals**2+1-3*l0*(l0+1)) #3s
+    Rs=Rs**2
+    Rp=((np_vals**2)/2)*(5*np_vals**2+1-3*l1*(l1+1)) #3p
+    Rp=Rp**2
+    Red=Rp**2-Rs**2 #to je na kvadrat
+    alfa=(9/2)*math.pow(ao,3)*math.pow((3*Eh)/(4*Ep),2)
+    w=(8.18e-12)*L0*L0*math.pow(alfa*Red,2/5)*math.pow(T*mi,3/10)*n
+    return w"""
+
+def part_funk(a,T):  #izracunavanje part f-je
+    K=0
+    for i in range(6):
+        K+=a[i]*pow(np.log(T),i) 
+    Z=np.exp(K) 
+    return Z
+	
+def kon_Na_koma(r):  #koncentracija Na Haserov model, u komi
+    Q=4*np.pi*Rn*Rn*kon_Na_jezgro(Ro)*vp
+    #Q=1e+28  
+    Dr=r-Rn
+    konc=(Q*ld*(np.exp(-Dr/lp)-np.exp(-Dr/ld)))/(4*np.pi*vt*r*r*(lp-ld))
+    return konc
+
+"""def kon_Na_koma(r):
+   kon=nna*math.exp(-20*r/Rk)
+   return kon"""
+
+#print(kon_Na_koma(Rk/100),"konc Na koma")
+
+#prosecna koncentracija H u komi, ako je Na Haser, a iz toga zastupljenost Sunca
+def kon_H_koma(dr):
+    Nh=0
+    r1=Rk
+    broj=br_ljuspica - 1
+    for i in range(broj):
+        r2=r1-dr
+        dVlj=((4*np.pi)/3)*(r1**3-r2**3)
+        nh=kon_Na_koma(r1)*math.pow(10,5.82)
+        Nh+=nh*dVlj
+        r1=r1-dr
+    dVlj=((4*np.pi)/3)*(r1**3)
+    nh=kon_Na_koma(r1)*math.pow(10,5.82)
+    Nh+=nh*dVlj	
+    Vk=(4*np.pi*(Rk**3))/3 #zapremina kome
+    nh=Nh/Vk
+    return nh 
+#print(kon_H_koma(dr), 'konc H koma srednje')
+#print(dr)	
+#"nh=konh(dr)
+
+def MaxBol(T,r): #koncentracija Na u osnovnom 3s stanju (n0) na rastojanju r od kome         
+    NaI=kon_Na_koma(r)  
+    Z=part_funk(a,T)
+    n0=(NaI*g0*np.exp(-np.abs(E0)/(k*T)))/Z
+    return n0	
+
+def ajnstajnB(A): # za A(koef emisije) vraca B (Ajnstajnov koef apsorpcije za verovatnocu prelaza (3s-3p)[m^3s^-2J^-1])
+    B=(L0**3*A*g1)/(8*np.pi*h*c*g0)
+    return B
+
+def Dopl_sirina(T): #Doplerova sirina u funkciji of temperature
+    Dopler=np.sqrt(2*R*T/M)/L0
+    return Dopler
+	
+def koef_aps(V,T,r,av):
+    B=ajnstajnB(A)
+    konc_aps=n0=MaxBol(T,r)
+    Dopler=Dopl_sirina(T)	
+    apsor=((B*n0*h*V)/(4*np.pi*Dopler))*Fojtov_profil(V,av)
+    return apsor    
+		
+def opt_dub(d,V,T,av): #opticka dubina za nehomogenu komu
+    r1=Rk
+    suma_opt=0
+    broj=br_ljuspica - 1 - math.floor((d)/dr)
+    for i in range(broj):
+        r2=r1-dr
+        ds=np.sqrt(r1*r1-d*d)-np.sqrt(r2*r2-d*d)       
+        suma_opt+=koef_aps(V,T,r1,av)*ds
+        r1=r1-dr
+    ds=np.sqrt(r1*r1-d*d)
+    suma_opt+=koef_aps(V,T,r1,av)*ds
+    suma_opt*=2	
+    return suma_opt
+
+def poc_intez(V,T): #pocetni intezitet preko plankove fje
+    plank=(2*h*V*V*V)/(c*c*(np.exp((h*V)/(k*T))-1))
+    return plank
+
+V2=c/(588.5e-9) #588 
+V1=c/(589.5e-9) #590 
+dV=(V2-V1)/100 
+
+def fja_izv(dV,av):
+    Vf=V1
+    suma=0
+    for i in range(300):
+        suma+=(poc_intez(Vf,T)*Fojtov_profil(Vf,av))*dV
+        Vf+=dV
+    suma=suma*1/2
+    return suma 
+
+def izlazni(V,av):
+    #izla=fja_izv(dV,av1)
+    a=(1/2)*(1-np.exp(-opt_dub(d,V,T,av)))
+    return a
+	
+def FWHM_G(T): #sirina na polovini max visine Gausa
+    gamma_G=Dopl_sirina(T)  #scale parametar za Gausa
+    Gg=2*np.sqrt(np.log(2))*gamma_G
+    return Gg
+# SAMO PRIRODNO SIRENJE!!!!!!!!!!!!! POSLE UBACITI STARKOVO I/ILI VAN DER WALSOVO SIRENJE USLED PRITISKA
+def FWHM_L(L0): #sirina na polovini max visine Lorenca 
+    gamma_L=A  #scale parametar za Lorenca, Rutten (3.45) 
+    Gl=gamma_L/(2*np.pi)
+    return Gl
+av1=(FWHM_L(V0))/FWHM_G(T)
+#av2=(FWHM_L(V0)+vd_vals(kon_H_koma(dr)))/(FWHM_G(T))
+#av3=(FWHM_L(V0)+vd_vals(kon_H_koma(dr)*10**22))/(FWHM_G(T))
+
+def Fojtov_profil(V,av):
+    F=voigt((V-V0)/Dopl_sirina(T),av)/np.sqrt(np.pi) #Fojtov normirani profil, u V0 0.56
+    return F
+
+d=0
+dd=Rk/1000
+x=[]
+y1=[]
+y2=[]
+y3=[]
+y4=[]
+y5=[]
+V=V2
+for i in range(300):
+    y1.append(izlazni(V,av1))
+   # y2.append(izlazni(V,av2)/poc_intez(V,Ts))
+   # y3.append(izlazni(V,av3)/poc_intez(V,Ts))
+    #y4.append(opt_dub(d,V,T,av1))
+    #y5.append(Fojtov_profil(V,av3))
+    #print(izlazni(V,av1), "/", poc_intez(V,Ts), "=", izlazni(V,av1)/poc_intez(V,Ts))
+    x.append(c/V)     
+    V-=dV
+#R=np.linspace(0,Rk,num=300)
+#y=kon(R)
+#print(y)    
+    
+#print(opt_dub(0,V0,T))
+#for i in range(1000):
+
+#    x.append(d)
+#    y.append(opt_dub(d,V0,T))
+#    d+=dd        	 
+#d=np.linspace(0,Rk,1000) #rastojanje pravca od centra kome
+#o=opt_dub(d,V0,T)
+#plt.suptitle('opticka dubina za razlicite paralelne preseke za nehomogenu komu')
+#plt.xlabel('rastojanje prave od centra kome [m]')
+#plt.ylabel('opticka dubina')
+z=[]
+r1=Rk
+f=[]
+"""for i in range(300):
+    f.append(r1) 
+    z.append(kon_Na_koma(r1))
+    r1=r1-dr
+plt.plot(f,z)"""    
+def E_W(x,y):
+    EW=0
+    tck=interpolate.splrep(x,y)
+    i=0
+    p=0
+    while (i<99):
+        EW+=interpolate.splint(x[i],x[i+1],tck)
+        i+=1
+    return EW
+plt.plot(x,y1,'blue')
+#plt.plot(x,y2,'red')
+#plt.plot(x,y3,'green')
+#print(E_W(x,y1),E_W(x,y2),E_W(x,y3))
+
+
+#plt.plot(x,y4,'blue')
+#plt.plot(x,y5,'red')
+
+#plt.xscale('log')
+#plt.yscale('log')
+plt.show()

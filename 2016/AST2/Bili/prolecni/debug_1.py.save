@@ -1,0 +1,16 @@
+#!/usr/bin/env python3
+
+import matplotlib.pyplot as plt
+import numpy as np
+#importovati podatke i plotovati
+#kod ima grske, potrebno je debagovati
+
+file = np.loadtxt('NUM_PS_2_Podaci.txt')
+x=file[:,0]
+y=file[:,1]
+
+plt.plot(x,y,'-g', label='ime_linije')
+plt.xlogscale()
+plt.title(ime)
+plt.ylim(0,0.5)
+plt.show()

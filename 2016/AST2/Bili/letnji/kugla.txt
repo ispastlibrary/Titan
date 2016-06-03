@@ -1,0 +1,11 @@
+Zadatak
+
+
+1) bez ikakvog profila, {.png formula, Dusan&Vanja}
+
+opticka dubina (V0): 5.38E+5
+
+2) Fojtov profil, {Lazarev kod, .png formula pomnozena
+sa Fojtovim profilom=Fojtova funkcija/sqrt(pi)} 
+
+opticka dubina (V0): 3.03E+5 

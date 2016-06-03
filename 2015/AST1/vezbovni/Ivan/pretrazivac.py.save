@@ -1,0 +1,23 @@
+x=[256, 4, 9, 3, 11, 23, 50]
+z=[]
+max=x[0]
+for i in range(len(x)):
+    if x[i]<max:
+        max=max
+    else:
+        max=x[i]
+print(max)
+
+min=x[0]
+for i in range (len(x)):
+    if x[i] < min:
+       min = x[i]
+    else:
+       min = minx.pop(min)
+z.append(min)
+print(z)
+
+
+    
+    
+ 

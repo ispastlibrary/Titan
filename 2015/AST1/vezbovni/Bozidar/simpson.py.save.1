@@ -1,0 +1,37 @@
+import numpy as np
+import scipy as sc
+x,y = np.loadtxt("lajna.txt", unpack = True)
+y = 1-y
+
+def lin(x0, y0, x1, y1, x):
+    y = y0 + (y1-y0) * (x-x0) / (x1-x0)
+    return y
+
+def cubspline(x0, y0, x1, y1, x)
+    y = 
+
+def simps(x0, y0, x1, y1):
+    p = (x1 - x0)/6 * (y0 + y1 + 4 * lin(x0, y0, x1, y1, (x0 + x1)/2))
+    return p
+
+def simps1(x0, y0, x1, y1):
+    p = (x1-x0)/6 * (y0 + y1 + 4 * cubspline(x0, y0, x1, y1, (x0 + x1)/2))
+    return p
+
+def trap(x0, y0, x1, y1):
+    s = (y0 + y1)/2 * (x1-x0)
+    return s
+
+suma1 = 0
+for i in range(len(x)-1):
+    suma1 += simps(x[i], y[i], x[i+1], y[i+1])
+print(suma1,"Linearna interpolacija + moj simpson")
+
+suma2 = 0
+for i in range(len(x)-1):
+    suma2 += trap(x[i], y[i], x[i+1], y[i+1])
+print(suma2, "Trapezno pravilo")
+
+suma 3 = 0
+for i in range(len(x)-1):
+    suma 3 += simps(x[i], y[i], x[i+1], y[i+1])

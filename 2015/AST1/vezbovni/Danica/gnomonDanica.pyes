@@ -1,0 +1,19 @@
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+t , l , dl=np.loadtxt('merenja3.txt' , unpack=True)
+
+def fun(x,a,b,c)
+    return a*x*x+b*x+c
+
+parametri, cov=curve_fit(fun, t, l , sigma=dl)
+greske_parametara=np.sqrt(np.diag(cov))
+
+print('Parametar a je:', parametri[0],'+/-', greske_parametara[0])
+#ovo nula mi je prvi clan svih parametara, dakle a
+print('parametar be je:', parametri[1], '+/-', greske_parametara[1])
+print('Parametar c je:', parametri[2], '+/-', greske_parametara[2])
+print -parametri[1]/(2*parametri[0])
+
+
+

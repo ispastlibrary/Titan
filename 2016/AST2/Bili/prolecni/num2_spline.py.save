@@ -1,0 +1,32 @@
+import math
+import numpy as np
+import pylab as pl
+from scipy import interpolate
+
+wavelen=[0]*100
+intens=[0]*100
+
+g=open('NUM_PS_2_Podaci.txt','r')
+
+i=0
+p=0
+
+while (i<100):
+    line=g.readline() 
+    linel=line.split(" ") 
+    wavelen[i]=float(linel[0])
+    intens[i]=float(linel[1])
+    i+=1	
+tck=interpolate.splrep(wavelen,intens,s=0)
+i=0
+while (i<99):
+    p+=interpolate.splint(wavelen[i],wavelen[i+1],tck)
+    #print(p)
+    i+=1
+EW=((wavelen[99]-wavelen[0])-p)
+g.close()
+print(EW)
+
+pl.plot(wavelen,intens)
+pl.plot()
+pl.show()

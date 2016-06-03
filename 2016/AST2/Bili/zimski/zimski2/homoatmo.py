@@ -1,0 +1,63 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+#n = 100
+#p = 10
+#q = 10
+A = []
+B = []
+Ma = 5.15e18 #masa atmosfere
+Ha = 11e3 #visina atmosfere
+Rz = 6378.1e3 #Poluprecnik Zemlje
+PN = 0.78084 #Procenat azota
+MN = 28.02e-3 #Molarna masa azota
+Na = 6.02e23 #Avogadrov broj
+KrosN = 5.1e-31 #[m2] za 532 nm azot
+LamN = 532e-9 #[m] azot
+
+"""def Kros(l):
+    k = (KrosN*((Ref(LamN)**2 - 1)/(Ref(LamN)**2 + 2))**2/(LamN**4))*((Ref(LamN)**2 - 1)/(Ref(LamN)**2 + 2))**2 / l**4
+    return k"""
+
+"""def Ref(l):
+    n = 1 + 6.8552e-5 + (3.243157e-2)/(144 - l**(-2))
+    return n"""
+
+def Konc(m, h, r, P):
+    V = 4/3 * np.pi * ((r+h)**3 - r**3)
+    n = Na*m*PN/MN
+    n = n/V
+    return n
+
+n = Konc(Ma, Ha, Rz, PN)
+#print(n)
+x = Ha*np.random.rand()
+y = Ha*np.random.rand()
+i = 0
+teta = 2*np.pi*np.random.rand()
+
+while (((y>0) and (y<Ha)) and ((x>0) and (x<Ha))):
+    A.append(x)
+    B.append(y)
+    i += 1
+    teta = 2*np.pi*np.random.rand()
+    #print(teta)
+    ksi = np.random.rand()
+    tau = -np.log(1-ksi)
+    #print(tau)
+    s = tau/(n*KrosN)
+    x += s*np.cos(teta)
+    y += s*np.sin(teta)
+    print(x, y)
+
+teta_ulazno = teta % np.pi    
+#print(Konc(Ma, Ha, Rz, PN),teta_ulazno)
+plt.scatter(A,B)
+plt.xlim(0,Ha)
+plt.ylim(0,Ha)
+plt.show()
+#plt.axvline(x = p, color = 'red')
+#plt.axhline(y = q, color = 'red')
+#plt.axvline(x = 0, color = 'red')
+#plt.axhline(y = 0, color = 'red')

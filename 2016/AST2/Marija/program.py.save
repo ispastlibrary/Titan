@@ -1,0 +1,41 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+p1x = []
+p1y = []
+p2x = []
+p2y = []
+
+r1 = np.array([0.61*1.5e11,0])
+r2 = np.array([-0.13*1.5e11,0])
+
+v1 = np.arraybash: y: command not found
+(0,75.4e3)
+v2 = vector(0,16e3)
+
+m1 = 5.73*1.98e30
+m2 = 1.22*1.98e30
+
+G = 6.67e-11
+
+T = 88.2*24*60*60
+
+t = 0;
+dt = 24*60*60
+
+p1x.append(r1.x)
+p1y.append(r1.y)
+p2x.append(r2.x)
+p2y.append(r2.y)
+
+while t <= T :
+    r = r1 - r2
+        
+
+    p1x.append(r1[0])
+    p1y.append(r1[1])
+    p2x.append(r2[0])
+    p2y.append(r2[1])
+    t += dt
+
+

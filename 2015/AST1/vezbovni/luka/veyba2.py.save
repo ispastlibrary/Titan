@@ -1,0 +1,20 @@
+import numpy as np
+from scipy.optimize import curve_fit
+import matplotlib.pyplot as plt
+
+l, V, dV = np.loadtxt('merenja.txt', unpack = True)
+
+def func(x, a, b):
+    return x*a + b
+
+parametri, cov_m = curve_fit(func, l, V,sigma = dV)
+
+greske_parametara = np.sqrt(np.diag(cov_m))
+
+print('Parametar a je: ', parametri[0], '+/-', greske_parametara[0])
+print('Parametrar b je: ', parametri[1], '+/-', greske_parametara[1])
+
+#plt.plot(modelirano_x)
+plt.errorbar(l, V, yerr=dV)
+plt.xlim([])
+plt.show()

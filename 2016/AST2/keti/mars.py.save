@@ -1,0 +1,5 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+t, x, y, z= np.loadtxt('mars.dat', delimiter=',', unpack=True)
+print y

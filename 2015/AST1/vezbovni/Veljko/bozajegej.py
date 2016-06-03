@@ -1,0 +1,1 @@
+print('boza je gej')

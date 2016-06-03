@@ -1,0 +1,40 @@
+import math
+import numpy as np
+
+Na=6.02*1e+23
+M=23*1e-3
+zastupljenost=3.34*1e-5
+Rj=8*1e+3
+roj=600
+
+
+T=350
+Rk=5e+7
+rok=1e-10
+k=1.38*1e-23
+dE=3.37*1e-19
+
+R=Na*k
+
+def kolicinaNa(ro,R):
+    m=zastupljenost*(R**3*np.pi)*ro*(4/3)
+    N=(m/M)*Na
+    return N  
+def kolicinae(ro,R,T):
+
+
+def kolicinao(ro,R,T):
+
+
+
+def Bolcman(T):
+    g0=1
+    g1=3
+    bla=(g1/g0)*(math.exp(-dE/(k*T)))    	
+    return bla 
+def koef_aps(T,n0,): #centralna duzina
+    
+    return koef
+#rkar=(roj*Rj**3)/(Rk**3)
+#print("gustina kome aprox najvece Rk",rkar)
+print((kolicinaNa(rok,Rk)*Bolcman(T))/(1+Bolcman(T))) #exc 

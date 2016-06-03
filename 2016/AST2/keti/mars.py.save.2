@@ -1,0 +1,13 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+
+t, x, y, z = np.loadtxt('mars.dat', delimiter=',', unpack=True)
+intenziteti = []
+for i in range (len(x)):
+    intenzitet = np.sqrt(x[i]**2+y[i]**2+y[i]**2)
+    intenziteti.append(intenzitet)
+intenzitetmax = max(intenziteti)
+intenzitetmin = min(intenziteti)
+

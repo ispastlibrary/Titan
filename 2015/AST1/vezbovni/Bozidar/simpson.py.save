@@ -1,0 +1,15 @@
+import numpy as np
+import scipy as sc
+x,y = np.loadtxt("lajna.txt", unpack = True)
+print(x)
+y1 = 1-y
+....
+
+
+def f1(x0, y0, x1, y1, x):
+    y = y0 + (y1-y0) * (x-x0) / (x1-x0)
+    return y
+
+def simpson(x0, y0, x1, y1):
+    povrs = (x1-x0)/6 * (y0 + y1 + 4*f1(x0, y0, x1, y1, (x1+x0)/2)
+    return povrs

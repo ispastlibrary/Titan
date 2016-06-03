@@ -1,0 +1,45 @@
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+l, t2, omega, dt2 = np.loadtxt('podaci.txt', unpack=True)
+
+#Sume
+sum_omega = np.sum(omega)
+sum_wy = np.sum(omega*t2)
+sum_wxy = np.sum(omega*l*t2)
+sum_wx = np.sum(omega*l)
+sum_wx2 = np.sum(omega*l**2)
+sum_w2x2 = sum_wx**2
+#Sume
+
+Br = sum_wxy*sum_omega - sum_wy*sum_wx
+Im = sum_omega*sum_wx2 - sum_w2x2
+
+b = Br/Im
+db = (sum_omega/Im)**1/2
+
+c = sum_wy/sum_omega
+d = sum_wx/sum_omega
+
+a = c - b * d
+
+g = 4* (np.pi)**2/b
+dg = 4*(np.pi)**2 * db
+
+#funkcija
+def fun(l, a, b):
+    return a + b * x
+x=np.arange(0.2, 1.2, 0.01)
+y=fun(l, a, b)
+
+#plot
+plt.plot(x, y, '-r', label = 'fit')
+plt.errorbar(l, t2, yerr=dt2, fmt='o')
+plt.legend(loc='best')
+plt.xlabel('l[m]')
+plt.ylabel('T**2[s**2]')
+plt.title('Period matematickog klatna')
+plt.show()
+
+xdata = np.linspace()

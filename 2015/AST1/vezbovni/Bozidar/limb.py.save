@@ -1,0 +1,22 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+T = 5 
+S = 2
+I1 = 1
+
+u = np.arange(0, 1, 0.2)
+I = np.linspace(0, 0, 6)
+
+def limb(u):
+    I = (np.exp(T/u)-1)*S + np.exp(-T/u)*I1
+    return I
+
+for i in range(len(u) - 1):
+    if i == 0: I[0] += I1
+    else:
+    y = limb(u[i])
+    I[i] += y
+
+print(I)
+print(u)

@@ -1,0 +1,13 @@
+"""
+Prebrojte koliko asteroida iz file-a "asteroidi.dat" ima inklinaciju
+izmedju 15 i 70 stepena i veliku poluosu duzu od 2.3 AJ.
+
+Podaci u file-u su rasporedjeni po kolonama:
+argument perihela [deg] | longituda uzlaznog cvora [deg] | inklinacija (i) [deg] | ekscentricitet (e) | velika poluosa (a) [AJ]
+"""
+import numpy as np
+Ap,Luc,IN,EXC,VP=np.loadtxt("asteroidi.dat",unpack=True);
+n=0
+for i in range (len(Ap)):
+    if((IN>15) and (IN<70) and (VP>2.3)):
+        n+=1;

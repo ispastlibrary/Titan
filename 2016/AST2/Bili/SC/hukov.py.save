@@ -1,0 +1,8 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+k1 = 2
+m1 = 2
+m2 = 4
+
+def huk(k,

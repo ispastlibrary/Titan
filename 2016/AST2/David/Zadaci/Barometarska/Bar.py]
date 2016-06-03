@@ -1,0 +1,30 @@
+import numpy as brojpit
+import matplotlib.pyplot as slika
+import scipy as naukpit
+
+x,y,greska = brojpit.loadtxt("barometarska.txt", unpack = True, delimiter = " ")
+hi = []
+al = []
+bl = []
+slika.plot(x,y, 'om')
+slika.errorbar(x,y,yerr = greska,fmt = None ,color = 'm')
+for i in range (10**2):
+    a = i/(2* 10**2)+1
+    for bo in range(10**2):
+        b = bo/10**2 
+        al.append(a) 
+        bl.append(b)
+        hi.append(0)
+        for jot in range(len(x)):
+            hi[i] = hi[i]+(y[jot]-a*2.718**(-b* x[jot]))/greska[jot]
+    if(i%10 == 0):
+        print(str(i) + "%")
+   
+min = 100
+for broj in range(10**4):
+    if(hi[broj]<min):
+        min = hi[broj]
+        brojtrazen = broj
+print(1.3)
+print(0.06)
+slika.show()

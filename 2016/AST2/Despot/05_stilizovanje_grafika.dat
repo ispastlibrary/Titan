@@ -1,0 +1,9 @@
+"""
+Trebate da napravite grafik koji ce izgledati kao onaj na slajdu.
+
+Podatke ucitajte iz file-a "stilizovanje_grafika.dat"
+"""
+
+
+import matplotlib.pyplot as plt
+from scipy

@@ -1,0 +1,14 @@
+import numpy as np
+
+lam = 1e-3
+gr = 0.01
+
+def newa(a, x):
+    a1 = a - lam*x**2
+    return a1
+
+def newb(b, x):
+    b1 = b - lam*x
+    return b1
+
+while(abs((a[i] - a[i-1])):

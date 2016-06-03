@@ -1,0 +1,8 @@
+import numpy as np
+
+tau=1/(5.7
+e-6+2e-15*1.5e8)
+tau1=1/(7e-8+2e-15*1.5e8)
+
+print(tau)
+print(tau1)
